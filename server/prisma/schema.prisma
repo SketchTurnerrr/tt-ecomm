@@ -17,7 +17,7 @@ model ShopItem {
   title     String   @db.VarChar(255)
   content   String?
   published Boolean  @default(false)
-  user    User     @relation(fields: [authorId], references: [id])
+  user      User     @relation(fields: [authorId], references: [id])
   authorId  Int
 }
 
@@ -29,9 +29,105 @@ model Profile {
 }
 
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  orders  ShopItem[]
-  profile Profile?
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  first_name String?
+  last_name  String?
+  orders     ShopItem[]
+  profile    Profile?
+}
+
+model UserAddres {
+  id            Int     @id @default(autoincrement())
+  user_id       Int
+  address_line1 String?
+  address_line2 String?
+  city          String?
+  postal_code   String?
+  country       String?
+  mobile        String?
+}
+
+model UserPayment {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  payment_type String
+  provider     String
+  expiry       DateTime
+}
+
+model ShopingSession {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  total     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+
+  id           Int      @id @default(autoincrement())
+  name         String
+  desc         String
+  SKU          String
+  category_id  Int
+  inventory_id Int
+  price        Float
+  discount_id  Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ProductCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  desc      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductInventory {
+  id        Int      @id @default(autoincrement())
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderDetails {
+
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  total      Float
+  payment_id Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model OrderItems {
+
+  id         Int      @id @default(autoincrement())
+  order_id   Int
+  product_id Int
+  quantity   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model CartItem {
+  id         Int      @id @default(autoincrement())
+  session_id Int
+  product_id Int
+  quantity   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model PaymentDetails {
+  id        Int      @id @default(autoincrement())
+  order_id  Int
+  amount    Int
+  provider  String
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
